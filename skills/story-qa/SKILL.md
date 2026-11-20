@@ -52,19 +52,19 @@ Then implement as you normally would, tests included, until the script passes (G
 
 ## 3. Review
 
-A fresh reader reviews the diff; you do not review your own work. Review only reads, so start it in the background and run step 4 while it works.
+A fresh reader reviews the diff; you do not review your own work.
 
-Start one new subagent (not a fork of this conversation, so it sees the Story and the diff but not your reasoning) with `run_in_background: true`, and go on to step 4 without waiting. Its prompt:
+Review only reads, so start one new subagent (not a fork of this conversation: it gets the request, the Story and the diff, never your reasoning) with `run_in_background: true`, and go on to step 4 without waiting. Its prompt:
 
-- Claude Code: "Read `docs/stories/<slug>.md` for the intended behavior. Run the `code-review` skill with the arguments `<level> --max-findings 5 <repository path>` and return its findings." Leave out `<repository path>` when the repository is the session's working directory. The skill reviews the committed and uncommitted changes. This is the `code-review` skill built into Claude Code, not the marketplace `code-review` plugin (a separate multi-agent command that comments on a PR). Level: `high` when the Story has a Human decides item from [references/risks.md](references/risks.md), otherwise `medium`. When a MUST touches authentication, payment or secrets, the same subagent also runs the built-in `security-review` skill.
-- Other hosts: "Read the request, `docs/stories/<slug>.md` and `git diff <base>...<story branch>`; return at most 5 findings, each as input → wrong result."
+- Claude Code: "The request: <request>. Read `docs/stories/<slug>.md` for the intended behavior. Run the `code-review` skill with the arguments `<level> --max-findings 5 <repository path>`. Rewrite each of its findings as file:line, input → wrong result, and the code change you suggest, and return that list." Leave out `<repository path>` when the repository is the session's working directory. The skill reviews the committed and uncommitted changes. This is the `code-review` skill built into Claude Code, not the marketplace `code-review` plugin (a separate multi-agent command that comments on a PR). Level: `high` when the Story has a Human decides item from [references/risks.md](references/risks.md), otherwise `medium`. When a MUST touches authentication, payment or secrets, the same subagent also runs the built-in `security-review` skill.
+- Other hosts: "Read the request, `docs/stories/<slug>.md` and `git diff <base>...<story branch>`; return at most 5 findings, each as file:line, input → wrong result, and the code change you suggest."
 
 When the findings arrive, sort each by what it touches:
 
-- A concrete failure (this input → this wrong result) in behavior the Story changes: fix it.
+- A concrete failure (this input → this wrong result) in behavior the Story changes, confirmed by running the input or tracing it through the code: fix it.
 - A concrete failure in behavior the Story keeps (Unchanged or OUT): report it for the human to decide.
 - A security failure (injection, broken auth, exposed secret) whose fix changes nothing a user sees: fix it, wherever it is.
-- Anything else: list it with a one-line reason for leaving it.
+- Anything else, including a failure you could not confirm: list it with a one-line reason for leaving it.
 
 After a fix from review, rerun the QA script and only the `agent` scenarios that exercise the code the fix changed.
 
