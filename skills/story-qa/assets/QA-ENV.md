@@ -10,6 +10,8 @@ Production is never used for QA.
 - Test data: <how to get the state a scenario needs: cart, coupon, card, flag>
 - External services: <sandbox, mock, or "needs a person">
 - Needs a person: <steps an agent cannot do, such as 2FA or payment authentication>
+- QA scripts: `qa/<slug>.sh`, run with `BASE_URL=<base URL> bash qa/<slug>.sh`
+- Browser test runner: <command such as `BASE_URL=<base URL> npx playwright test qa/<slug>.spec.ts`, or "none">
 
 ## Integration (dev)
 
@@ -18,4 +20,5 @@ Production is never used for QA.
 - Production branch: <main>
 - Dev base URL: <URL>
 - Dev runs the merged commit when: <how to check, e.g. GET /version returns the commit>
+- Dev QA in CI: <`.github/workflows/qa-dev.yml`, with repository variables DEV_BASE_URL and DEV_VERSION_PATH, or "none">
 - Dev login and test data: <same as local, or how it differs>

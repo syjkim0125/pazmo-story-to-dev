@@ -1,0 +1,116 @@
+# Copy to .github/workflows/qa-dev.yml in the target repository.
+# After a merge into the integration branch, waits until dev runs the merged commit, then runs
+# the QA scripts that commit added or changed against dev. No model is called here.
+# On failure it opens a revert PR; a person merges or closes it.
+#
+# Needs: repository variables DEV_BASE_URL (e.g. https://dev.example.com) and DEV_VERSION_PATH
+# (a path whose response contains the deployed commit, e.g. /version); the repository setting
+# "Allow GitHub Actions to create and approve pull requests" for the revert PR.
+# Optional: qa-dev-triage.yml explains a failure with Claude.
+name: QA on dev
+
+on:
+  push:
+    branches: [dev] # the QA doc's integration branch
+  workflow_dispatch:
+    inputs:
+      all:
+        description: Run every script in qa/, not only the ones the last commit changed
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: qa-dev
+  cancel-in-progress: false
+
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      BASE_URL: ${{ vars.DEV_BASE_URL }}
+      VERSION_URL: ${{ vars.DEV_BASE_URL }}${{ vars.DEV_VERSION_PATH }}
+      RUN_ALL: ${{ inputs.all }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Pick QA scripts
+        id: pick
+        run: |
+          if [ "$RUN_ALL" = "true" ]; then
+            files=$(ls qa/*.sh qa/*.spec.* 2>/dev/null || true)
+          else
+            files=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- 'qa/*.sh' 'qa/*.spec.*')
+          fi
+          if [ -z "$files" ]; then echo "No QA scripts changed in this commit."; echo "any=no" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "any=yes" >> "$GITHUB_OUTPUT"
+          { echo 'files<<EOF'; echo "$files"; echo 'EOF'; } >> "$GITHUB_OUTPUT"
+
+      - name: Wait until dev runs this commit
+        if: steps.pick.outputs.any == 'yes'
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS --max-time 10 "$VERSION_URL" | grep -q "${GITHUB_SHA::7}"; then
+              echo "dev runs ${GITHUB_SHA::7}"; exit 0
+            fi
+            sleep 30
+          done
+          echo "dev did not report ${GITHUB_SHA::7} within 30 minutes"; exit 1
+
+      - name: Install Playwright
+        if: contains(steps.pick.outputs.files, '.spec.')
+        run: npm ci && npx playwright install --with-deps chromium
+
+      - name: Run QA scripts
+        id: qa
+        if: steps.pick.outputs.any == 'yes'
+        env:
+          FILES: ${{ steps.pick.outputs.files }}
+        run: |
+          set -o pipefail
+          run_all() {
+            local status=0
+            while read -r f; do
+              [ -n "$f" ] || continue
+              echo "== $f"
+              case "$f" in
+                *.sh) bash "$f" || status=1 ;;
+                *) npx playwright test "$f" || status=1 ;;
+              esac
+            done <<< "$FILES"
+            return $status
+          }
+          run_all 2>&1 | tee qa-output.txt
+
+      - name: Keep QA output
+        if: always() && steps.qa.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-output
+          path: qa-output.txt
+
+      - name: Open revert PR
+        if: failure() && steps.qa.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch="revert-qa-${GITHUB_SHA::7}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          if [ "$(git rev-list --parents -n 1 HEAD | wc -w)" -gt 2 ]; then
+            git revert --no-edit -m 1 HEAD
+          else
+            git revert --no-edit HEAD
+          fi
+          git push origin "$branch"
+          { echo "Dev QA failed for $GITHUB_SHA. A person decides whether to merge or close this PR."
+            echo; echo '```'; tail -50 qa-output.txt; echo '```'; } > body.md
+          gh pr create --base "$GITHUB_REF_NAME" --head "$branch" \
+            --title "Revert ${GITHUB_SHA::7}: dev QA failed" --body-file body.md

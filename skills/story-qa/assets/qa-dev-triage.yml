@@ -1,0 +1,42 @@
+# Optional. Copy to .github/workflows/qa-dev-triage.yml next to qa-dev.yml.
+# Calls Claude only when "QA on dev" failed, to say why on the revert PR. It changes no code.
+# Needs: repository secret ANTHROPIC_API_KEY.
+name: QA on dev triage
+
+on:
+  workflow_run:
+    workflows: ["QA on dev"]
+    types: [completed]
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+jobs:
+  triage:
+    if: github.event.workflow_run.conclusion == 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Dev QA failed for commit ${{ github.event.workflow_run.head_sha }} on ${{ vars.DEV_BASE_URL }}.
+            Read the failure with: gh run view ${{ github.event.workflow_run.id }} --log-failed
+            The scripts are in qa/, the Stories they check in docs/stories/.
+            For each FAIL line, say which one it is, with the evidence:
+            - the app is wrong (file:line),
+            - the check is wrong (the script does not match the Story's QA line),
+            - dev differs from local (data, config, deploy not finished).
+            Post this as one comment on the PR whose head branch is
+            revert-qa-<first 7 characters of the commit> (gh pr list --head ...). If there is no such PR,
+            print it instead. Do not edit files or push.
+          claude_args: |
+            --max-turns 15
+            --allowedTools "Read,Grep,Glob,Bash(gh run view:*),Bash(gh pr list:*),Bash(gh pr comment:*),Bash(curl:*)"

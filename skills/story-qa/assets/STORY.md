@@ -23,9 +23,11 @@
 
 ## QA
 Environment: <local or staging, from docs/qa.md>
-- Q1 [M1]. <where> · <setup> · <action> → <expected visible result>
-- Q2 [Unchanged]. <where> · <setup> · <action> → <expected visible result>
-- Q3 [not shown]. <where> · <setup> · <action> → <the change does not appear>
+Script: qa/<slug>.sh (or qa/<slug>.spec.ts)
+- Q1 [M1] (script). <where> · <setup> · <action> → <expected visible result>
+- Q2 [Unchanged] (script). <where> · <setup> · <action> → <expected visible result>
+- Q3 [not shown] (script). <where> · <setup> · <action> → <the change does not appear>
+- Q4 [M2] (agent | person). <where> · <setup> · <action> → <expected visible result>
 
 ---
 Status: Draft | Approved
