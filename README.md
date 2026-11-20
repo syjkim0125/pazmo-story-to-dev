@@ -1,4 +1,4 @@
-# story-qa-kit
+# pazmo-story-to-dev
 
 AI에게 일을 맡길 때 사람이 확인하는 건 두 가지예요. **내 요청을 맞게 이해했나**, **실제로 띄운 앱에서 그렇게 동작하나.** 그 사이는 Claude가 원래 하던 대로 해요.
 
@@ -9,7 +9,7 @@ Story + QA 목록 → 사람 승인 → 구현(순정) → 독립 리뷰 → 로
 
 ## 왜 이렇게 가볍나
 
-이전 ai-workflow-kit(5.x)은 단계 순서, 모델 나눠 쓰기, 그래프 실행기로 모델을 이끌었어요. 같은 작업 6개를 각 10번씩 비교해 보니, 비용을 줄인 kit은 순정 Opus와 품질이 같았고(1대1 5승 5패) 시간은 1.8~2.3배 걸렸어요. kit이 진 이유의 절반은 요청 해석이었어요. 사람이 Story를 한 번 보면 잡을 수 있는 종류예요. 그래서 사람이 보는 부분만 남겼어요.
+이전 [ai-workflow-kit](https://github.com/syjkim0125/ai-workflow-kit)은 단계 순서, 모델 나눠 쓰기, 그래프 실행기로 모델을 이끌었어요. 요즘 모델은 그런 안내 없이도 잘 구현해요. 모델이 아무리 좋아져도 대신할 수 없는 건 두 가지예요. 요청이 두 가지로 읽힐 때 무엇을 뜻했는지 아는 사람, 그리고 실제 앱에서 그렇게 동작하는지 보여 주는 증거. 그래서 그 두 가지만 남겼어요.
 
 ## 들어 있는 것
 
@@ -25,11 +25,11 @@ Story + QA 목록 → 사람 승인 → 구현(순정) → 독립 리뷰 → 로
 Claude Code:
 
 ```sh
-claude plugin marketplace add <이 저장소 경로 또는 URL>
-claude plugin install story-qa-kit@story-qa
+claude plugin marketplace add syjkim0125/pazmo-story-to-dev
+claude plugin install pazmo-story-to-dev@pazmo-story-to-dev
 ```
 
-새 세션에서 `/story-qa <요청>`으로 시작해요.
+새 세션에서 `/story-qa <요청>`으로 시작해요. 다른 플러그인과 이름이 겹치면 `/pazmo-story-to-dev:story-qa <요청>`을 써요.
 
 ## 저장소마다 할 일
 

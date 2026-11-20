@@ -1,9 +1,9 @@
 {
-  "name": "story-qa",
+  "name": "pazmo-story-to-dev",
   "owner": { "name": "JongKun Kim" },
   "plugins": [
     {
-      "name": "story-qa-kit",
+      "name": "pazmo-story-to-dev",
       "version": "0.1.0",
       "source": ".",
       "description": "One Story a human reads, a QA list fixed before coding, stock implementation, code review, then QA on the running app.",
