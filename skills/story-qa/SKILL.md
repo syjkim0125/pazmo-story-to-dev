@@ -46,7 +46,7 @@ Before editing code, turn every `script` scenario into a check that reads its ba
 - Screen: `qa/<slug>.spec.*` for the repository's browser test runner.
 - CLI: `qa/<slug>.sh` lines that run the command and `grep` its output.
 
-Each check carries the scenario id and the expected text of the approved QA line. Start the app and run the script: the scenarios the change adds fail, Unchanged passes (RED). A change scenario that passes now does not test the change: fix the check.
+Each check carries the scenario id and the exact expected text of the approved QA line (no model judges a result). Start the app and run the script: the scenarios the change adds fail, Unchanged passes (RED). A change scenario that passes now does not test the change: fix the check.
 
 Then implement as you normally would, tests included, until the script passes (GREEN). The approved QA list and the expected results in the script are fixed: when the code cannot meet a scenario, stop and tell the human instead of changing the scenario.
 
@@ -54,9 +54,9 @@ Then implement as you normally would, tests included, until the script passes (G
 
 A fresh reader reviews the diff; you do not review your own work. Review only reads, so start it in the background and run step 4 while it works.
 
-Start one background subagent whose prompt is:
+Start one new subagent (not a fork of this conversation, so it sees the Story and the diff but not your reasoning) with `run_in_background: true`, and go on to step 4 without waiting. Its prompt:
 
-- Claude Code: "Read `docs/stories/<slug>.md` for the intended behavior. Run the `code-review` skill with exactly the arguments `<level> --max-findings 5` and return its findings." (It reviews the branch's committed and uncommitted changes.) This is the `code-review` skill built into Claude Code, not the marketplace `code-review` plugin (a separate multi-agent command that comments on a PR). Level: `high` when the Story has a Human decides item from [references/risks.md](references/risks.md), otherwise `medium`. When a MUST touches authentication, payment or secrets, the same subagent also runs the built-in `security-review` skill.
+- Claude Code: "Read `docs/stories/<slug>.md` for the intended behavior. Run the `code-review` skill with the arguments `<level> --max-findings 5 <repository path>` and return its findings." Leave out `<repository path>` when the repository is the session's working directory. The skill reviews the committed and uncommitted changes. This is the `code-review` skill built into Claude Code, not the marketplace `code-review` plugin (a separate multi-agent command that comments on a PR). Level: `high` when the Story has a Human decides item from [references/risks.md](references/risks.md), otherwise `medium`. When a MUST touches authentication, payment or secrets, the same subagent also runs the built-in `security-review` skill.
 - Other hosts: "Read the request, `docs/stories/<slug>.md` and `git diff <base>...<story branch>`; return at most 5 findings, each as input → wrong result."
 
 When the findings arrive, sort each by what it touches:
@@ -75,11 +75,11 @@ Start the app locally as the QA doc says. Run the QA script against it (`BASE_UR
 | The expected result is | Tool | Evidence |
 |---|---|---|
 | in the HTML or API response | HTTP client (`curl`) | the matching response excerpt |
-| only after JS runs, or after a click or input | browser tool | page text (accessibility snapshot or `innerText`) |
+| only after JS runs, or after a click or input | browser tool | the element's text (find the element or read its `innerText`; no full-page snapshot) |
 | how the screen looks (layout, color, image) | browser tool | screenshot |
 | CLI output | the command | output excerpt |
 
-A step that needs a person (two-factor login, payment authentication, a real device): ask the human for that step only, then continue. A failing scenario: fix, then rerun the QA script, that scenario, and the `agent` scenarios that exercise the code the fix changed; leave other passed `agent` scenarios as they are. Stop the app when done.
+A step that needs a person (two-factor login, payment authentication, a real device): ask the human for that step only, then continue. A failing scenario: fix, then rerun the QA script, that scenario, and the `agent` scenarios that exercise the code the fix changed; leave other passed `agent` scenarios as they are. Stop the app when done, by the process ID you started (other sessions may run the same command).
 
 ## 5. Merge to the integration branch
 
@@ -99,7 +99,7 @@ The `script` scenarios on dev:
 - The repository has `.github/workflows/qa-dev.yml`: it waits until dev runs the merged commit and runs the script there. Read its result (`gh run list --workflow qa-dev.yml --commit <merge commit>`, then `gh run watch <id>`) instead of running the script yourself.
 - Otherwise: wait until dev runs the merged commit (the QA doc says how to check, for example a version endpoint showing the commit), then run `BASE_URL=<dev base URL> bash qa/<slug>.sh`.
 
-Run the `agent` and `person` scenarios on dev as in step 4. A scenario that passed locally and fails on dev: do not fix on the integration branch; report it with the evidence, and open a revert PR for the human to merge or close (the workflow opens one itself).
+Run the `agent` and `person` scenarios on dev as in step 4. A scenario that passed locally and fails on dev stays failed (do not skip or loosen its check, and do not fix on the integration branch): report it with the evidence, and open a revert PR for the human to merge or close (the workflow opens one itself).
 
 ## Report
 

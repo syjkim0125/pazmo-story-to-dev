@@ -18,17 +18,18 @@ expect() {
   else echo "PASS $1 $2: $(grep -oF -- "$4" <<<"$body" | head -1)"; fi
 }
 
-# reject <id> <path> <text that must not appear>
+# reject <id> <path> <status> <text that must not appear>
 reject() {
-  local out body
+  local out code body
   out=$(fetch "$2") || { echo "FAIL $1 $2: request failed"; failed=1; return; }
-  body=${out%$'\n'*}
-  if grep -qF -- "$3" <<<"$body"; then echo "FAIL $1 $2: shows \"$3\""; failed=1
-  else echo "PASS $1 $2: no \"$3\""; fi
+  code=${out##*$'\n'}; body=${out%$'\n'*}
+  if [ "$code" != "$3" ]; then echo "FAIL $1 $2: status $code, expected $3"; failed=1
+  elif grep -qF -- "$4" <<<"$body"; then echo "FAIL $1 $2: shows \"$4\""; failed=1
+  else echo "PASS $1 $2: no \"$4\""; fi
 }
 
 # One line per scriptable QA scenario; the id matches the Story's QA list.
 expect Q1 "/orders?user=u1" 200 "New notice text"
-reject Q3 "/orders?user=u2" "New notice text"
+reject Q3 "/orders?user=u2" 200 "New notice text"
 
 exit $failed

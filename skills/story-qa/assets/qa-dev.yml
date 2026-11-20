@@ -6,6 +6,9 @@
 # Needs: repository variables DEV_BASE_URL (e.g. https://dev.example.com) and DEV_VERSION_PATH
 # (a path whose response contains the deployed commit, e.g. /version); the repository setting
 # "Allow GitHub Actions to create and approve pull requests" for the revert PR.
+# Merge the PR with a person's or app's token: a merge pushed with the default GITHUB_TOKEN does not
+# start other workflows, so neither the dev deploy nor this QA would run.
+# If the dev deploy reports a GitHub deployment, `on: deployment_status` can replace the wait step.
 # Optional: qa-dev-triage.yml explains a failure with Claude.
 name: QA on dev
 
