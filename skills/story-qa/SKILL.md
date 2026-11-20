@@ -9,7 +9,7 @@ argument-hint: "[request]"
 The human checks two things: that you understood the request, and that the running app does it. Everything between those two checks is your normal way of working.
 
 ```
-1 STORY + QA LIST  →  human approves  →  2 IMPLEMENT  →  3 REVIEW  →  4 LOCAL QA
+1 STORY + QA LIST  →  human approves  →  2 IMPLEMENT  →  3 REVIEW (background) ∥ 4 LOCAL QA
   →  5 MERGE TO DEV (only when the QA doc turns it on)  →  6 DEV QA  →  human approves
 ```
 
@@ -37,21 +37,34 @@ Work as you normally would, tests included. The approved QA list is fixed: when 
 
 ## 3. Review
 
-A fresh reader reviews the diff; you do not review your own work.
+A fresh reader reviews the diff; you do not review your own work. Review only reads, so start it in the background and run step 4 while it works.
 
-- Claude Code: run the `code-review` skill on the current diff and pass the Story path as the intent.
-- Other hosts: one subagent gets only the request, the Story and `git diff`, and returns findings.
+Start one background subagent whose prompt is:
 
-Sort each finding by what it touches:
+- Claude Code: "Read `docs/stories/<slug>.md` for the intended behavior. Run the `code-review` skill with exactly the arguments `<level> --max-findings 5` and return its findings." (It reviews the branch's committed and uncommitted changes.) This is the `code-review` skill built into Claude Code, not the marketplace `code-review` plugin (a separate multi-agent command that comments on a PR). Level: `high` when the Story has a Human decides item from [references/risks.md](references/risks.md), otherwise `medium`. When a MUST touches authentication, payment or secrets, the same subagent also runs the built-in `security-review` skill.
+- Other hosts: "Read the request, `docs/stories/<slug>.md` and `git diff <base>...<story branch>`; return at most 5 findings, each as input → wrong result."
+
+When the findings arrive, sort each by what it touches:
 
 - A concrete failure (this input → this wrong result) in behavior the Story changes: fix it.
 - A concrete failure in behavior the Story keeps (Unchanged or OUT): report it for the human to decide.
 - A security failure (injection, broken auth, exposed secret) whose fix changes nothing a user sees: fix it, wherever it is.
 - Anything else: list it with a one-line reason for leaving it.
 
+After a fix from review, rerun only the QA scenarios that exercise the code the fix changed.
+
 ## 4. Local QA
 
-Start the app locally as the QA doc says. Run every approved scenario through the real interface: a browser tool for screens, an HTTP client for APIs, the CLI for commands. Evidence per scenario: a screenshot for a screen, a response excerpt for an API, an output excerpt for a command. A step that needs a person (two-factor login, payment authentication, a real device): ask the human for that step only, then continue. A failing scenario: fix, then rerun it and the scenarios that passed before. Stop the app when done.
+Start the app locally as the QA doc says. Run every approved scenario through the real interface, with the first tool that can show its expected result:
+
+| The expected result is | Tool | Evidence |
+|---|---|---|
+| in the HTML or API response | HTTP client (`curl`) | the matching response excerpt |
+| only after JS runs, or after a click or input | browser tool | page text (accessibility snapshot or `innerText`) |
+| how the screen looks (layout, color, image) | browser tool | screenshot |
+| CLI output | the command | output excerpt |
+
+A step that needs a person (two-factor login, payment authentication, a real device): ask the human for that step only, then continue. A failing scenario: fix, then rerun that scenario and the scenarios that exercise the code the fix changed; leave other passed scenarios as they are. Stop the app when done.
 
 ## 5. Merge to the integration branch
 
@@ -74,7 +87,7 @@ Show the human, in this order, then ask for approval:
 
 ```
 변경: <files and what changed, 3 lines at most>
-QA: | 시나리오 | 로컬 | dev | 근거 (screenshot path, response excerpt, command output) |
+QA: | 시나리오 | 로컬 | dev | 근거 (response excerpt, page text, command output, or screenshot path) |
 머지: <PR link and merge commit, or "사람이 머지">
 리뷰: <findings fixed> / <findings for the human to decide> / <findings left, with reason>
 테스트: <passed>/<total>, <command>
