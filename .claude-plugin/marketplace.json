@@ -4,7 +4,7 @@
   "plugins": [
     {
       "name": "pazmo-story-to-dev",
-      "version": "0.2.0",
+      "version": "0.2.1",
       "source": ".",
       "description": "One Story a human reads, a QA list fixed before coding, stock implementation, code review, then QA on the running app.",
       "category": "development",
