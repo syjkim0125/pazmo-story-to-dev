@@ -19,6 +19,8 @@ Write to the human in their language.
 
 Start a new branch from the integration branch (or the default branch). Explore the code as much as you need: the code path, callers, tests, parallel copies (sibling folders or files that hold the same feature for another brand, site, platform or locale), and how the app is started.
 
+**Small change.** After exploring, check three things: the request has no fork (the Decisions part would be empty), every file the change edits sits in one module (one directory or package, and only one copy), and it touches nothing in [references/risks.md](references/risks.md). When all three hold, write no Story file: show the human in chat today → after → unchanged, the file you will edit, and 1–3 QA lines with how each runs, then ask for approval and end your turn. After approval, follow steps 2–6 with those lines as the approved QA list (give them to the reviewer in place of the Story path); write `qa/<slug>.sh` only when the QA doc says `Auto-merge: on`, otherwise run the lines directly in step 4. When any of the three does not hold, write the Story.
+
 Write `docs/stories/<slug>.md` from [assets/STORY.md](assets/STORY.md): keep its headings, write the content in the human's language. Its parts:
 
 - **Goal:** As-is, To-be, Unchanged.
