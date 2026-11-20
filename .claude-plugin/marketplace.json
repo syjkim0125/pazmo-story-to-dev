@@ -1,0 +1,14 @@
+{
+  "name": "story-qa",
+  "owner": { "name": "JongKun Kim" },
+  "plugins": [
+    {
+      "name": "story-qa-kit",
+      "version": "0.1.0",
+      "source": ".",
+      "description": "One Story a human reads, a QA list fixed before coding, stock implementation, code review, then QA on the running app.",
+      "category": "development",
+      "tags": ["workflow", "requirements", "qa", "review"]
+    }
+  ]
+}

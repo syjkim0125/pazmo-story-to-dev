@@ -1,0 +1,6 @@
+{
+  "name": "story-qa-kit",
+  "version": "0.1.0",
+  "description": "One Story a human reads, a QA list fixed before coding, stock implementation, code review, then QA on the running app.",
+  "skills": "./skills/"
+}
