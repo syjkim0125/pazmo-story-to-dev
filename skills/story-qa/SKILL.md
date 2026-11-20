@@ -27,7 +27,7 @@ Write `docs/stories/<slug>.md` from [assets/STORY.md](assets/STORY.md): keep its
 - **Decisions:** a fork is a place where the request reads more than one way in this code and the readings show different results to some user: two signals that could mean the request's word, several copies, several screens. Each fork gives the options, your pick and the `file:line` that supports it. Copies: the change covers every copy unless the request or the code names one; a narrower pick is a fork with its reason.
 - **Human decides:** a decision listed in [references/risks.md](references/risks.md) (money, migration, auth, external contract, stored data) is never picked by you; list it under Human decides.
 - **MUST / OUT:** every sentence of the request maps to a MUST, or to OUT with the reason.
-- **QA:** the scenarios you will run on the running app in step 4, written now from the request. At least one per MUST and per copy, one for Unchanged, and at least one where the change must not show. Each scenario: where (URL, screen, command), setup (account, data, flags), action, expected visible result, and how it runs:
+- **QA:** the scenarios you will run on the running app in step 4, written now from the request. At least one per MUST, one for Unchanged, and one where the change must not show. Copies that take the same check share one scenario that lists them, and its check runs once per copy. Each scenario: where (URL, screen, command), setup (account, data, flags), action, expected visible result, and how it runs:
   - `script`: the expected result shows in an HTTP response or CLI output, or the repository has a browser test runner (such as Playwright) for a screen.
   - `agent`: it needs a browser and the repository has no browser test runner, or it is about how the screen looks.
   - `person`: it needs two-factor login, payment authentication or a real device.
@@ -56,7 +56,7 @@ A fresh reader reviews the diff; you do not review your own work.
 
 Review only reads, so start one new subagent (not a fork of this conversation: it gets the request, the Story and the diff, never your reasoning) with `run_in_background: true`, and go on to step 4 without waiting. Its prompt:
 
-- Claude Code: "The request: <request>. Read `docs/stories/<slug>.md` for the intended behavior. Run the `code-review` skill with the arguments `<level> --max-findings 5 <repository path>`. Rewrite each of its findings as file:line, input → wrong result, and the code change you suggest, and return that list." Leave out `<repository path>` when the repository is the session's working directory. The skill reviews the committed and uncommitted changes. This is the `code-review` skill built into Claude Code, not the marketplace `code-review` plugin (a separate multi-agent command that comments on a PR). Level: `high` when the Story has a Human decides item from [references/risks.md](references/risks.md), otherwise `medium`. When a MUST touches authentication, payment or secrets, the same subagent also runs the built-in `security-review` skill.
+- Claude Code: "The request: <request>. Read `docs/stories/<slug>.md` for the intended behavior. Run the `code-review` skill with the arguments `medium --max-findings 5 <repository path>`. Rewrite each of its findings as file:line, input → wrong result, and the code change you suggest, and return that list." Leave out `<repository path>` when the repository is the session's working directory. The skill reviews the committed and uncommitted changes. This is the `code-review` skill built into Claude Code, not the marketplace `code-review` plugin (a separate multi-agent command that comments on a PR). When a MUST touches authentication, payment or secrets, the same subagent also runs the built-in `security-review` skill.
 - Other hosts: "Read the request, `docs/stories/<slug>.md` and `git diff <base>...<story branch>`; return at most 5 findings, each as file:line, input → wrong result, and the code change you suggest."
 
 When the findings arrive, sort each by what it touches:
@@ -65,8 +65,6 @@ When the findings arrive, sort each by what it touches:
 - A concrete failure in behavior the Story keeps (Unchanged or OUT): report it for the human to decide.
 - A security failure (injection, broken auth, exposed secret) whose fix changes nothing a user sees: fix it, wherever it is.
 - Anything else, including a failure you could not confirm: list it with a one-line reason for leaving it.
-
-After a fix from review, rerun the QA script and only the `agent` scenarios that exercise the code the fix changed.
 
 ## 4. Local QA
 
@@ -79,7 +77,7 @@ Start the app locally as the QA doc says. Run the QA script against it (`BASE_UR
 | how the screen looks (layout, color, image) | browser tool | screenshot |
 | CLI output | the command | output excerpt |
 
-A step that needs a person (two-factor login, payment authentication, a real device): ask the human for that step only, then continue. A failing scenario: fix, then rerun the QA script, that scenario, and the `agent` scenarios that exercise the code the fix changed; leave other passed `agent` scenarios as they are. Stop the app when done, by the process ID you started (other sessions may run the same command).
+A step that needs a person (two-factor login, payment authentication, a real device): ask the human for that step only, then continue. After any fix (a failing scenario or a review finding): rerun the QA script, the failing scenario, and the `agent` scenarios that exercise the code the fix changed; leave other passed `agent` scenarios as they are. Stop the app when done, by the process ID you started (other sessions may run the same command).
 
 ## 5. Merge to the integration branch
 
