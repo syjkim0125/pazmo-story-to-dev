@@ -65,6 +65,11 @@ for t in 'Status: Approved' 'skips `qa-writer`' 'reuses the saved scripts' 'neve
   need_text "$Q" "$t"
 done
 
+# README
+R=README.md
+for t in '/story' '/qa' '@pazmo/cli' 'PAZMO_NO_TELEMETRY' 'PolyForm Shield' 'security-guidance' '0.3.0'; do need_text "$R" "$t"; done
+checks=$((checks + 1)); [ "$(grep -c '/story-qa' "$R")" -le 1 ] || fail "$R mentions /story-qa outside the change note"
+
 # Public repository: no internal names, no measurement claims
 files=$(git ls-files --cached --others --exclude-standard | grep -v '^scripts/check.sh$')
 if [ -f .deny-list ]; then
