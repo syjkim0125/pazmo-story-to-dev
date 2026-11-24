@@ -39,6 +39,23 @@ T=skills/story/assets/STORY.md
 for t in '## Goal' '## Decisions' '## Human decides' '## MUST' '## OUT' 'Status: Draft | Approved'; do need_text "$T" "$t"; done
 forbid_fixed "$T" '## QA'
 
+# QA agents
+for a in qa-writer qa-runner; do
+  A=agents/$a.md
+  need_front "$A" name "$a"
+  need_front "$A" omitClaudeMd true
+  need_text "$A" 'never read source code, tests, the diff'
+done
+need_text agents/qa-writer.md 'docs/stories/<slug>.qa.md'
+checks=$((checks + 1)); frontmatter agents/qa-writer.md tools | grep -q Bash && fail "qa-writer must not have Bash"
+for t in 'free port' 'uncommitted changes' 'No substitute checks' 'one at a time' 'stop the process it started' 'Scenarios:' 'Target: dev'; do
+  need_text agents/qa-runner.md "$t"
+done
+Q=skills/qa/assets/QA-STORY.md
+for t in 'Target:' '- Q1 [M1] (script). <where> · <setup> · <action> → <expected visible result>' 'Status: Draft | Approved'; do need_text "$Q" "$t"; done
+E=skills/qa/assets/QA-ENV.md
+for t in 'Target: local | preview' 'Setup:' 'Preview:' 'Database: in-memory | per-run container | shared'; do need_text "$E" "$t"; done
+
 # Public repository: no internal names, no measurement claims
 files=$(git ls-files --cached --others --exclude-standard | grep -v '^scripts/check.sh$')
 if [ -f .deny-list ]; then
