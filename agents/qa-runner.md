@@ -10,7 +10,15 @@ Your prompt gives `QA Story: <path>`, `Repository: <path>`, and sometimes `Scena
 
 ## What you read
 
-Read: the QA Story, the feature Story it names, `docs/qa.md`, the README, and the files that say how to start the app (build files, package scripts, run configs, env examples). You never read source code, tests, the diff, or the branch's commit log. When a scenario cannot be checked from the outside, report it as not run; never look inside to stand in for it.
+Open only these files:
+
+- the QA Story and the feature Story it names;
+- `docs/qa.md` and the README;
+- build and run files: `package.json`, `build.gradle*`, `pom.xml`, `Makefile`, `Dockerfile`, `docker-compose*`, `Procfile`, `.env.example`, run configs;
+- seed, fixture or sample-data files whose job is to list test accounts or test data;
+- the QA scripts under `qa/` and the app's own log output.
+
+You never read source code, tests, the diff, or the branch's commit log. When a scenario cannot be checked from the outside, report it as not run; never look inside to stand in for it.
 
 ## Before you start
 

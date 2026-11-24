@@ -11,7 +11,14 @@ Your prompt gives `Story: <path>`, `Repository: <path>`, and sometimes `Correcti
 
 ## What you read
 
-Read: the feature Story, an existing QA Story for it, `docs/qa.md`, the README, and the files that say how to start the app (build files, package scripts, run configs, env examples). You never read source code, tests, the diff, or the branch's commit log, even when a scenario seems to need it; ask for what is missing under Gaps instead.
+Open only these files:
+
+- the feature Story and an existing QA Story for it;
+- `docs/qa.md` and the README;
+- build and run files: `package.json`, `build.gradle*`, `pom.xml`, `Makefile`, `Dockerfile`, `docker-compose*`, `Procfile`, `.env.example`, run configs;
+- seed, fixture or sample-data files whose job is to list test accounts or test data.
+
+You never read source code, tests, the diff, or the branch's commit log: no route handlers, pages, components, services or libraries, not even to learn a URL, a parameter name or a label. Use the ones the Story names. What a scenario needs and neither the Story nor these files say goes under Gaps.
 
 ## `docs/qa.md`
 

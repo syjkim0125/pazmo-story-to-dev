@@ -45,6 +45,7 @@ for a in qa-writer qa-runner; do
   need_front "$A" name "$a"
   need_front "$A" omitClaudeMd true
   need_text "$A" 'never read source code, tests, the diff'
+  need_text "$A" 'Open only these files'
 done
 need_text agents/qa-writer.md 'docs/stories/<slug>.qa.md'
 checks=$((checks + 1)); frontmatter agents/qa-writer.md tools | grep -q Bash && fail "qa-writer must not have Bash"
