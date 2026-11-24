@@ -26,6 +26,19 @@ need_absent skills/story-qa
 need_file skills/story/references/risks.md
 for f in QA-ENV.md qa-check.sh qa-dev.yml qa-dev-triage.yml; do need_file "skills/qa/assets/$f"; done
 
+# /story
+S=skills/story/SKILL.md
+need_front "$S" name story
+need_front "$S" disable-model-invocation true
+for t in 'Small change' 'medium --max-findings 5' 'MUST check' 'pazmo-story-to-dev:qa-writer' 'pazmo-story-to-dev:qa-runner' \
+  'security-review' 'PAZMO_NO_TELEMETRY=1 npx -y @pazmo/cli@0.1.2 scan . --json' 'in one message' 'Commit everything' \
+  "start \`qa-writer\` again with the person's words" 'not run' 'Auto-merge: on' '확인하지 못한 것' '스캐너' 'never sleep or poll'; do
+  need_text "$S" "$t"
+done
+T=skills/story/assets/STORY.md
+for t in '## Goal' '## Decisions' '## Human decides' '## MUST' '## OUT' 'Status: Draft | Approved'; do need_text "$T" "$t"; done
+forbid_fixed "$T" '## QA'
+
 # Public repository: no internal names, no measurement claims
 files=$(git ls-files --cached --others --exclude-standard | grep -v '^scripts/check.sh$')
 if [ -f .deny-list ]; then
