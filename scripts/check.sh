@@ -56,6 +56,15 @@ for t in 'Target:' '- Q1 [M1] (script). <where> · <setup> · <action> → <expe
 E=skills/qa/assets/QA-ENV.md
 for t in 'Target: local | preview' 'Setup:' 'Preview:' 'Database: in-memory | per-run container | shared'; do need_text "$E" "$t"; done
 
+# /qa
+Q=skills/qa/SKILL.md
+need_front "$Q" name qa
+need_front "$Q" disable-model-invocation true
+checks=$((checks + 1)); frontmatter "$Q" argument-hint | grep -qF '[local|preview|dev]' || fail "$Q argument-hint lacks [local|preview|dev]"
+for t in 'Status: Approved' 'skips `qa-writer`' 'reuses the saved scripts' 'never read source code' 'pazmo-story-to-dev:qa-runner' 'never sleep or poll'; do
+  need_text "$Q" "$t"
+done
+
 # Public repository: no internal names, no measurement claims
 files=$(git ls-files --cached --others --exclude-standard | grep -v '^scripts/check.sh$')
 if [ -f .deny-list ]; then
