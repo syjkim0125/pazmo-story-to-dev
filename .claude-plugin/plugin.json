@@ -1,7 +1,7 @@
 {
   "name": "pazmo-story-to-dev",
-  "version": "0.2.2",
-  "description": "One Story a human reads, a QA list fixed before coding, stock implementation, code review, then QA on the running app.",
+  "version": "0.3.0",
+  "description": "A feature Story a human approves, stock development, then QA and a security review that start on their own.",
   "author": { "name": "JongKun Kim" },
   "license": "MIT",
   "skills": ["./skills/"]
