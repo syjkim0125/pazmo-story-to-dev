@@ -53,6 +53,8 @@ Show the person, one line each: the QA Story path, each scenario title with how 
 
 ## 4. QA and security, in one message
 
+Before starting `qa-runner`, read `docs/qa.md`. When its `Start` is missing or still a `<...>` placeholder, or the QA Story lists a gap about starting the app or logging in that the person has not answered, do not start `qa-runner`: report every scenario as not run with that reason, and ask the person to fill those fields and run `/qa` later. Start the security subagent anyway.
+
 When `docs/qa.md` says `Target: preview`, push the branch first; push for nothing else here. Then start both of these in one message, so they run at the same time:
 
 - The agent `pazmo-story-to-dev:qa-runner` with `QA Story: docs/stories/<slug>.qa.md` and `Repository: <repository path>`.

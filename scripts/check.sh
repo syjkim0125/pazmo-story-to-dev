@@ -99,6 +99,12 @@ need_text agents/qa-runner.md 'Never start it with `&` or `nohup`'
 forbid_fixed agents/qa-runner.md 'by that process ID'
 need_text skills/qa/SKILL.md 'background mode of your shell tool'
 need_text skills/story/SKILL.md 'Left running:'
+# QA pre-check: no runner when docs/qa.md cannot start the app; bounded start attempts
+need_text skills/story/SKILL.md 'Before starting `qa-runner`'
+need_text skills/story/SKILL.md 'still a `<...>` placeholder'
+need_text skills/qa/SKILL.md 'Before starting `qa-runner`'
+need_text agents/qa-runner.md 'at most one retry'
+need_text agents/qa-runner.md 'at most 10 minutes for the ready check'
 
 # Public repository: no internal names, no measurement claims
 files=$(git ls-files --cached --others --exclude-standard | grep -v '^scripts/check.sh$')
