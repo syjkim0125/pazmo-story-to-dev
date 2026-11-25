@@ -49,7 +49,7 @@ for a in qa-writer qa-runner; do
 done
 need_text agents/qa-writer.md 'docs/stories/<slug>.qa.md'
 checks=$((checks + 1)); frontmatter agents/qa-writer.md tools | grep -q Bash && fail "qa-writer must not have Bash"
-for t in 'free port' 'uncommitted changes' 'No substitute checks' 'one at a time' 'stop the process it started' 'Scenarios:' 'Target: dev'; do
+for t in 'free port' 'uncommitted changes' 'No substitute checks' 'one at a time' 'Scenarios:' 'Target: dev'; do
   need_text agents/qa-runner.md "$t"
 done
 Q=skills/qa/assets/QA-STORY.md
@@ -90,6 +90,15 @@ need_text skills/story/SKILL.md 'Scanner: ran | not run: <error>'
 need_text skills/story/SKILL.md 'security-review <ran | not run: reason>'
 forbid_fixed skills/qa/assets/qa-check.sh "the Story's QA list"
 forbid_fixed skills/qa/assets/qa-dev-triage.yml "the Story's QA line"
+# Apps started for QA must be stoppable under a sandbox: background mode of the shell tool, not nohup/&
+need_text agents/qa-runner.md 'background mode of your shell tool'
+need_text agents/qa-runner.md '`run_in_background`'
+need_text agents/qa-runner.md '`TaskStop`'
+need_text agents/qa-runner.md 'Left running:'
+need_text agents/qa-runner.md 'Never start it with `&` or `nohup`'
+forbid_fixed agents/qa-runner.md 'by that process ID'
+need_text skills/qa/SKILL.md 'background mode of your shell tool'
+need_text skills/story/SKILL.md 'Left running:'
 
 # Public repository: no internal names, no measurement claims
 files=$(git ls-files --cached --others --exclude-standard | grep -v '^scripts/check.sh$')

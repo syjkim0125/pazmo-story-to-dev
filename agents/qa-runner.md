@@ -60,7 +60,7 @@ CLI scenarios: lines that run the command and `grep` its output, printing `PASS`
 
 ## Running
 
-- `Target: local` (the default): run `Setup` from `docs/qa.md` when it names one and the repository lacks what it installs. Start the app on a free port as `Start` says, in the background, and keep the process ID. Wait for its ready check. Run `BASE_URL=http://localhost:<port> bash qa/<slug>.sh` and the `agent` scenarios. Then stop the process it started, by that process ID (other sessions may run the same command).
+- `Target: local` (the default): run `Setup` from `docs/qa.md` when it names one and the repository lacks what it installs. Start the app on a free port as `Start` says, with the background mode of your shell tool, and keep the task ID it gives (in Claude Code: the Bash tool with `run_in_background`, stopped with `TaskStop`). Never start it with `&` or `nohup`: a sandbox may then refuse to stop it. Wait for its ready check. Run `BASE_URL=http://localhost:<port> bash qa/<slug>.sh` and the `agent` scenarios. Then stop that task with the shell tool's stop command, never by a name match (other sessions may run the same command), and check the port is free. Only when the host has no background mode, start it with `&`, keep the process ID and stop it with `kill`. When the port still answers after stopping, return it under `Left running:`.
 - `Target: preview`: when `docs/qa.md` says `Preview: off`, every scenario is not run, with that reason. Otherwise wait until the preview URL serves the branch's current commit, then run against it.
 - `Target: dev`: first check that dev serves the branch's commit, as `docs/qa.md` says, then run against the dev base URL.
 - Wait at most 30 minutes for a preview or dev to serve the commit. When it does not serve it within 30 minutes, every scenario is not run, with that reason.
@@ -75,6 +75,7 @@ CLI scenarios: lines that run the command and `grep` its output, printing `PASS`
 | 시나리오 | 실행 | 결과 | 근거 |
 Scripts: <paths written or changed>
 Not run: <scenario — reason, or the step a person must do>, or none
+Left running: <process ID and port of an app you could not stop>, or none
 ```
 
 `실행` is `script`, `agent` or `person`. `결과` is `PASS`, `FAIL` or `not run`. `근거` is the script output line, a response excerpt, the element text, or a screenshot path.

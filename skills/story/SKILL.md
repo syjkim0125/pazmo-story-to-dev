@@ -68,7 +68,7 @@ The base is `git merge-base <integration branch> HEAD`. Commit the QA scripts th
 
 For a failed scenario or a security fix: fix it here, commit, and start `qa-runner` again with the extra line `Scenarios: <ids>` (the failed ones and those the fix touches). Fix the app, never the QA Story or anything under `qa/`. When a scenario itself looks wrong, show it to the person; changing it goes back through `qa-writer` and approval 2.
 
-When the runner says the app could not start: if the error is in code this branch changed, fix it and rerun like a failure; otherwise report it under `확인하지 못한 것`. On `Not run: uncommitted changes`, commit and start it once more. When a fix commit came after the security review started, run the security subagent again with the base set to the commit before the fixes. After two rounds with failures left, stop and report.
+When the runner says the app could not start: if the error is in code this branch changed, fix it and rerun like a failure; otherwise report it under `확인하지 못한 것`. On `Not run: uncommitted changes`, commit and start it once more. When it returns `Left running:` other than none, put the process ID, the port and the command to stop it under `확인하지 못한 것`. When a fix commit came after the security review started, run the security subagent again with the base set to the commit before the fixes. After two rounds with failures left, stop and report.
 
 Scenarios the runner reported as needing a person (two-factor login, payment authentication, a real device): ask the person for those steps now, then start `qa-runner` again for just those scenarios.
 
