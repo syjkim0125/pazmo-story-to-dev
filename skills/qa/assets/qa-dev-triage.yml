@@ -29,10 +29,10 @@ jobs:
           prompt: |
             Dev QA failed for commit ${{ github.event.workflow_run.head_sha }} on ${{ vars.DEV_BASE_URL }}.
             Read the failure with: gh run view ${{ github.event.workflow_run.id }} --log-failed
-            The scripts are in qa/, the Stories they check in docs/stories/.
+            The scripts are in qa/, the QA Stories they check in docs/stories/*.qa.md.
             For each FAIL line, say which one it is, with the evidence:
             - the app is wrong (file:line),
-            - the check is wrong (the script does not match the Story's QA line),
+            - the check is wrong (the script does not match the scenario in docs/stories/<slug>.qa.md),
             - dev differs from local (data, config, deploy not finished).
             Post this as one comment on the PR whose head branch is
             revert-qa-<first 7 characters of the commit> (gh pr list --head ...). If there is no such PR,

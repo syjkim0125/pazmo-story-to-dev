@@ -71,6 +71,26 @@ R=README.md
 for t in '/story' '/qa' '@pazmo/cli' 'PAZMO_NO_TELEMETRY' 'PolyForm Shield' 'security-guidance' '0.3.0'; do need_text "$R" "$t"; done
 checks=$((checks + 1)); [ "$(grep -c '/story-qa' "$R")" -le 1 ] || fail "$R mentions /story-qa outside the change note"
 
+# Final-review fixes
+need_text skills/story/SKILL.md 'Fix the app, never the QA Story or anything under `qa/`'
+need_text skills/story/SKILL.md 'answers to gaps go in the `Correction:` line'
+need_text agents/qa-writer.md 'also update the `docs/qa.md` fields it answers'
+need_text agents/qa-runner.md "Target: the prompt's \`Target:\` line, else the QA Story's \`Target:\`, else \`local\`"
+need_text skills/qa/SKILL.md 'always pass `Target: <target>`'
+need_text agents/qa-runner.md 'within 30 minutes'
+need_text skills/qa/SKILL.md 'only when `docs/qa.md` turns preview on'
+need_text agents/qa-runner.md 'Write only under `qa/`'
+need_text agents/qa-runner.md 'start no subagents'
+need_text agents/qa-runner.md 'temp directory outside the repository'
+need_text skills/story/SKILL.md 'if the error is in code this branch changed'
+need_text skills/story/SKILL.md 'On `Not run: uncommitted changes`'
+need_text skills/qa/SKILL.md 'follow steps 3 to 5 of [../story/SKILL.md](../story/SKILL.md)'
+need_text skills/story/SKILL.md 'not the marketplace `code-review` plugin'
+need_text skills/story/SKILL.md 'Scanner: ran | not run: <error>'
+need_text skills/story/SKILL.md 'security-review <ran | not run: reason>'
+forbid_fixed skills/qa/assets/qa-check.sh "the Story's QA list"
+forbid_fixed skills/qa/assets/qa-dev-triage.yml "the Story's QA line"
+
 # Public repository: no internal names, no measurement claims
 files=$(git ls-files --cached --others --exclude-standard | grep -v '^scripts/check.sh$')
 if [ -f .deny-list ]; then

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# QA checks for docs/stories/<slug>.md. Copy to qa/<slug>.sh and replace the example checks.
+# QA checks for docs/stories/<slug>.qa.md. Copy to qa/<slug>.sh and replace the example checks.
 # Run: BASE_URL=http://localhost:3000 bash qa/<slug>.sh
 # Prints PASS/FAIL per scenario id; exits 1 when any check fails.
 set -u
@@ -28,7 +28,7 @@ reject() {
   else echo "PASS $1 $2: no \"$4\""; fi
 }
 
-# One line per scriptable QA scenario; the id matches the Story's QA list.
+# One line per script scenario; the id matches the QA Story's scenario id.
 expect Q1 "/orders?user=u1" 200 "New notice text"
 reject Q3 "/orders?user=u2" 200 "New notice text"
 

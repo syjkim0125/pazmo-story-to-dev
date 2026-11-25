@@ -82,7 +82,7 @@ Status: Draft
   - `script`: the result shows in an HTTP response or CLI output, or the repository has a browser test runner for a screen.
   - `agent`: it needs a browser and there is no browser test runner, or it is about how the screen looks.
   - `person`: it needs two-factor login, payment authentication or a real device.
-- With `Correction:`, change what the person asked for and keep the rest.
+- With `Correction:`, change what the person asked for and keep the rest. When it answers a gap, also update the `docs/qa.md` fields it answers.
 
 Write nothing else. Return exactly:
 
