@@ -29,9 +29,9 @@
 - H1. <a decision from references/risks.md> → <the person's answer | open, blocks <what>>
 
 ## Quality bars
-| Area | Bar | Checked by |
-|---|---|---|
-| <from references/quality.md> | <threshold> | script \| agent \| person at the final review \| after launch only |
+| Area | Bar | Checked by | Tag |
+|---|---|---|---|
+| <from references/quality.md> | <threshold> | script \| agent \| code-reading check \| person at the final review \| after launch only | <`[quality: …]` from references/quality.md, or none> |
 
 ## Success after launch
 - Primary metric: <what would tell you this worked>

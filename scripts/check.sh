@@ -114,13 +114,15 @@ for t in 'Anything in `references/risks.md` is at least medium' 'Never lower it'
   'never edit the plan, the QA Story or anything under `qa/`' 'Status: proposed' 'You would notice it is wrong if' \
   'Stop and hand over instead of picking' 'medium --max-findings 10' 'do not argue for your decisions' \
   'The plan stays `Status: Approved`' 'Small work with no QA run is never merged by you' 'the person accepted the final review' \
-  'references/intake.md' 'references/large.md' 'references/quality.md' 'assets/REVIEW.md'; do
+  'references/intake.md' 'references/large.md' 'references/quality.md' 'assets/REVIEW.md' 'is not an approval' \
+  'Only 수락 counts as accepted for step 6' 'before every `qa-runner` start' 'do step 6 first when its conditions hold'; do
   need_text "$S" "$t"
 done
 L=skills/story/references/large.md
 for t in 'read `docs/stories/<slug>.tasks.json` and continue from it' 'Never start two builders at once' 'An instruction is not a lock' \
   'git diff --name-only <before> HEAD' 'Only the runner'"'"'s result changes a task to `passed`' 'never passed' \
-  'this is the only question in the middle of a build' 'Never edit the plan'; do
+  'this is the only question in the middle of a build' 'Never edit the plan' 'git rm -q -f' 'When no task is `todo` or `parked`' \
+  'docs/stories/<slug>.tasks.json docs/qa.md qa/' 'only when it returned a commit'; do
   need_text "$L" "$t"
 done
 I=skills/story/references/intake.md
@@ -131,7 +133,10 @@ for t in 'is a floor, not "accessible"' 'Never report field numbers before launc
 V=skills/story/assets/REVIEW.md
 for t in '더한 것' '뺀 것' '사람이 정할 것' '확인하지 못한 것' 'at most seven decisions' 'never a justification' 'Status: Draft | Accepted'; do need_text "$V" "$t"; done
 for t in 'npx -y @axe-core/cli@4.14.0' 'npx -y lighthouse@13.6.0' 'never call it field performance' 'Never install a tool, or another version of one' \
-  'the two pinned commands under Quality scenarios'; do need_text agents/qa-runner.md "$t"; done
+  'the two pinned commands under Quality scenarios' 'SKIP <id>: <reason>' 'only when it installs nothing'; do need_text agents/qa-runner.md "$t"; done
+need_text skills/story/references/quality.md 'Never check out another commit'
+need_text agents/qa-writer.md 'never open it'
+need_text skills/qa/SKILL.md 'or it does not say `Status: Approved`'
 for t in 'Add no scenario that maps to none of these' '[quality: a11y-scan]' 'One scenario per Unchanged item' 'tag it `[M1]`'; do need_text agents/qa-writer.md "$t"; done
 need_text skills/qa/assets/QA-ENV.md 'Quality checks: kit default'
 need_text agents/qa-writer.md 'Quality checks: kit default'

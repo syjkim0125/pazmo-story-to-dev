@@ -13,7 +13,7 @@ Put a row in the plan for each check whose "Runs for" matches this work. The per
 | Performance, lab | only when the plan sets a budget | median of 5 runs, mobile profile: LCP ≤ 2.5 s, CLS ≤ 0.1, blocking time within the plan's budget | script | `[quality: performance]` |
 | Planned events | only when the plan lists events | every listed event is seen when its example runs | agent | `[quality: events]` |
 | Text for other languages | only when the plan lists locales, or the repository already has translation files | no user-facing text hard-coded in new code | code-reading check (b) below | none |
-| Code health | all medium and large work | no new warnings from the repository's own linter and static analysis, against the base | code-reading check (a) below | none |
+| Code health | all medium and large work | no warning from the repository's own linter and static analysis on the lines this branch changed | code-reading check (a) below | none |
 | Screen reader on the core flow | work with a web interface | the person can complete it | person at the final review | none |
 | Field performance, translation quality, the success metric | any | measured on real users | after launch only | none |
 
@@ -31,4 +31,4 @@ Rows with a scenario tag are run by `qa-runner` from the running app. `qa-writer
 
 Add this to the security subagent's prompt, word for word:
 
-"(4) Quality checks that read code. (a) Code health: find the repository's own lint and static-analysis commands in its build files and CI config. Run them on HEAD and on <base>, and report the warnings that are new on HEAD as file:line and rule. Install nothing. When there is no such command, or it cannot run, write the reason. (b) Only when the plan lists locales or the repository already has translation files: list user-facing text hard-coded in lines changed in <base>...HEAD, as file:line and the text. Add two lines to the start of your return: `Code health: ran | not run: <reason>` and `Hard-coded text: ran | not run: <reason> | not applicable`."
+"(4) Quality checks that read code. (a) Code health: find the repository's own lint and static-analysis commands in its build files and CI config. Run them on HEAD without their fix mode, and report the warnings on lines changed in <base>...HEAD as file:line and rule. Never check out another commit and never leave a changed file behind: QA is running in this working tree. Install nothing. When there is no such command, or it cannot run, write the reason. (b) Only when the plan lists locales or the repository already has translation files: list user-facing text hard-coded in lines changed in <base>...HEAD, as file:line and the text. Add two lines to the start of your return: `Code health: ran | not run: <reason>` and `Hard-coded text: ran | not run: <reason> | not applicable`."

@@ -9,8 +9,7 @@ Read the request and the repository, then draft for yourself:
 - a one-paragraph restatement: who has what problem today, and what is different for them afterwards;
 - two or three readings of the request, from the smallest that fits the words to the fullest a reasonable person could mean, each as a list of things a user would see;
 - where the readings differ in something a user would see, and where the request contradicts itself;
-- the lenses of [risks.md](risks.md) that match;
-- what `docs/qa.md` lacks to start the app and log in.
+- the lenses of [risks.md](risks.md) that match.
 
 ## Questions
 
@@ -20,14 +19,13 @@ Give options to choose from wherever you can.
 |---|---|---|
 | 1 | "Here is what I understood: who has what problem today, and what will be different when this is done. Is that right?" | Always |
 | 2 | "The smallest version that fits your words is A. A fuller version would also include B, C, D. Which of these are in?" The person answers per item. | Always |
-| 3 | "Here is what a user will see. Yes, no, or change it?" Five to nine examples; at least two at the edge of scope, at least one that must not happen. | Always |
+| 3 | "Here is what a user will see. Yes, no, or change it?" Large work usually has five to nine examples, with at least two at the edge of scope and one that must not happen. Medium work has as many as the request needs, with at least one at the edge of scope. | Always |
 | 4 | "These are out of scope. Is anything you expect in neither list?" | Always |
 | 5 | Each matching decision from `risks.md`, one at a time | A lens matches |
 | 6 | "Who uses this? Is there a group that must not be excluded: age, assistive technology, language or region?" | The work has a user interface and the repository does not say |
 | 7 | "After launch, what would tell you this worked? What must not get worse?" | Once, for large work; with no answer, propose one for a yes or no |
 | 8 | "Can this reach everyone at once, or must it be possible to turn it off?" | It changes a flow existing users rely on, or a lens matched |
 | 9 | "Your request says X and also Y. Which holds?" | You found a contradiction |
-| 10 | What `docs/qa.md` lacks to start the app or log in | Those fields are missing |
 
 ## Rules
 
@@ -36,6 +34,8 @@ Give options to choose from wherever you can.
 - Never ask about language, framework, libraries, architecture, data model, file layout, how to split or order the work, test strategy, naming, check tools, or anything the repository answers. You decide those.
 - A choice that looks technical but falls under `risks.md`, such as which payment provider to use, is the person's.
 - Ask a `risks.md` item only when it changes this work's behavior.
+
+What `docs/qa.md` lacks to start the app or log in is not asked here: `qa-writer` reports it as gaps, and they are shown at the approval.
 
 ## When to stop asking
 

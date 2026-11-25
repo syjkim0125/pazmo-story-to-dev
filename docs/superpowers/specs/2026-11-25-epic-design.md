@@ -191,8 +191,7 @@ Before asking anything, the main session reads the request and the repository, t
 - a one-paragraph restatement: who has what problem today, and what is different for them afterwards;
 - two or three readings of the request, from the smallest that fits the words to the fullest a reasonable person could mean, each as a list of things a user would see;
 - where the readings differ in something a user would see, and where the request contradicts itself;
-- the `risks.md` lenses that match;
-- what `docs/qa.md` lacks to start the app and log in.
+- the `risks.md` lenses that match.
 
 Questions, one at a time, with options where possible:
 
@@ -207,13 +206,13 @@ Questions, one at a time, with options where possible:
 | 7 | After launch, what would tell you this worked, and what must not get worse? | Once; with no answer, the AI proposes one for a yes or no |
 | 8 | Can this reach everyone at once, or must it be possible to turn it off? | It changes a flow existing users rely on, or a lens matched |
 | 9 | The request says X and also Y. Which holds? | A contradiction was found |
-| 10 | What `docs/qa.md` lacks to start the app or log in | Those fields are missing |
 
 Rules:
 
 - Question 2 shows both readings as lists of user-visible items. No item is marked as recommended or default. An item nobody answered stays open; the AI never moves it to out of scope. (**Choice**, approach 2.)
 - An example has the form `where · action → visible result`. (**Evidence**: R3.1, examples a person answers yes or no.)
-- Questions 5 to 10 are asked only on their trigger. (**Evidence**: asking by default has a measured cost, R3.1.)
+- What `docs/qa.md` lacks to start the app or log in is not an intake question: `qa-writer` reports it as gaps at the approval. For large work those gaps must be answered before the approval counts, because without them no example can be checked during the build.
+- Questions 5 to 9 are asked only on their trigger. (**Evidence**: asking by default has a measured cost, R3.1.)
 - Never ask the person about language, framework, libraries, architecture, data model, file layout, task split or order, test strategy, naming, which check tool, or anything the repository answers. A choice that looks technical but falls under `risks.md`, such as which payment provider, is the person's. (**Evidence**: questions the user cannot answer are wasted, R3.1.)
 - Stop asking when every sentence of the request maps to an example, to out of scope with a reason, or to a Human decides item; the readings no longer differ in anything a user would see; and every matched risk item is answered or recorded as open with the tasks it blocks.
 - Budget: five questions beyond the first four, not counting risk items. Past it the AI picks and lists the pick for the final review. Scope breadth and risk items are never picked this way. (**Choice**: no study gives the value of one more question.)
@@ -241,9 +240,9 @@ For large work the main session coordinates and writes no feature code itself. S
    - Append to `decisions.md` each decision that changes what a user sees, what is stored, or what is hard to reverse. Routine choices are not logged.
    - When the task needs a `risks.md` decision the plan does not answer, a change to scope, a one-way step the plan does not cover, or when a check looks wrong: do not pick. Return it as a flag.
    - Return the commit, the decisions added, the flags, and what you could not do.
-3. **Lock check.** After each builder returns, the main session compares the commits it made against the plan, the QA Story and `qa/`. Any change there is reverted and recorded for the final review. (**Evidence**: read-only tests blocked test edits; LLM monitors alone caught only part of the cheating, R3.2. An instruction is not a lock, as the current spec already says.)
+3. **Lock check.** After each builder returns, the main session compares the commits it made against the plan, the QA Story, `docs/qa.md` and `qa/`. Any change there is undone and recorded for the final review. (**Evidence**: read-only tests blocked test edits; LLM monitors alone caught only part of the cheating, R3.2. An instruction is not a lock, as the current spec already says.)
 4. **Acceptance.** When every task serving an example is `built`, start `qa-runner` with `Scenarios:` for that example. Commit the scripts it wrote. Pass: those tasks become `passed`. Fail: a new builder gets the runner's evidence and fixes the app; after two rounds the example is marked failed, the loop goes on, and the failure is reported. Only the runner's result changes a task to `passed`. (**Evidence**: features were marked passing without end-to-end verification; an agent's own "done" is not reliable, R3.2.)
-5. **Flags.** A flagged decision parks the tasks that depend on it and the loop continues with the rest. When everything left is parked, stop and ask the person; this is the only contact in the middle. Otherwise flags are answered at the final review. (**Evidence**: a sanctioned way to stop and hand over cut cheating sharply on realistic tasks, R3.2. Parking instead of stopping is a **choice**.)
+5. **Flags.** A flagged decision parks the tasks that depend on it and the loop continues with the rest. When only parked tasks are left, stop and ask the person every open flag in one message; this is the only contact in the middle. With the answers the parked tasks are built. A flag that parks nothing is answered at the final review. (**Evidence**: a sanctioned way to stop and hand over cut cheating sharply on realistic tasks, R3.2. Parking instead of stopping is a **choice**.)
 
 Decision entry in `docs/stories/<slug>.decisions.md`:
 
@@ -278,14 +277,14 @@ Defaults by kind of work, for medium and large. Small work runs none of these be
 | Check | Runs for | How | Bar | Verifier |
 |---|---|---|---|---|
 | Acceptance examples | all medium and large work | `qa-runner` scripts and agent scenarios | every E# passes | script, agent |
-| Accessibility rule scan | work with a web interface | axe-core on each route and key state the examples reach (dialog open, form error, empty) | 0 violations at WCAG 2.2 A and AA | script |
+| Accessibility rule scan | work with a web interface | axe-core on each URL the examples reach, as loaded; a state that needs a click first only through the repository's own browser test runner | 0 violations at WCAG 2.2 A and AA | script |
 | Keyboard and focus walk | work with a web interface | the runner tabs through the core flow in a browser | every control reachable; focus visible and not fully hidden; Escape closes overlays and focus returns | agent, with screenshots |
-| Narrow screen and large text | work with a web interface | browser at 320 px width and at 200% text | no horizontal scroll; no clipped text | script |
+| Narrow screen and large text | work with a web interface | the runner opens each URL in a browser at 320 px width and at 200% text | no horizontal scroll; no clipped text | agent |
 | Empty, loading and error states | work with data views | the runner forces each state | each data view shows all of them; an error says how to fix and keeps the input | agent |
-| Performance, lab | only when the plan sets a budget | Lighthouse, mobile profile, median of 5 runs | LCP ≤ 2.5 s, CLS ≤ 0.1, and the plan's blocking-time and size budgets | script |
-| Layout for other languages | only when the plan lists locales, or the repository already translates | search for hard-coded text in new code; a pseudo-locale run | none; no overflow | script (code-reading side) and agent |
-| Code health | all medium and large work | the repository's own linter and static analysis, compared with the base branch | no new warnings | script (code-reading side) |
-| Planned events | only when the plan lists events | the acceptance run asserts each fires | every listed event seen | script |
+| Performance, lab | only when the plan sets a budget | Lighthouse, mobile profile, median of 5 runs | LCP ≤ 2.5 s, CLS ≤ 0.1, and the plan's blocking-time budget | script |
+| Text for other languages | only when the plan lists locales, or the repository already translates | search for hard-coded text in the lines the branch changed | none | code-reading check |
+| Code health | all medium and large work | the repository's own linter and static analysis, run on HEAD and read on the lines the branch changed | no warning on those lines | code-reading check |
+| Planned events | only when the plan lists events | the runner reads the browser's network log while the example runs | every listed event seen | agent |
 | Screen reader on the core flow | work with a web interface | a person, at the final review | the person can complete it | person |
 | Field performance, translation quality, the success metric | — | real users | — | after launch only |
 
@@ -320,7 +319,7 @@ Rules:
 - Section 3 lists at most seven decisions, ordered by cost to reverse and then by effect on users, each as a question with where to check it. The rest are linked. (**Choice** on the count and order.)
 - Section 4 is links and numbers from the runners, next to their bars. The main session does not summarize them in its own words.
 - Sections 5 and 6 are kept even when empty: `없음`.
-- The person's call: **accept** turns the decisions to `accepted` and the review file to `Status: Accepted`; the plan stays `Status: Approved`, which other tools may read. **Accept with changes** turns each change into tasks; they run through phase 3, the scenarios they touch run again, and only the changes are shown again. **Wrong direction** goes back to intake with the named example or scope item; the plan is corrected and approved again before any more code.
+- The person's call: **accept** turns the decisions to `accepted` and the review file to `Status: Accepted`; the plan stays `Status: Approved`, which other tools may read. **Accept with changes** turns each change into tasks; they run through phase 3, the scenarios they touch run again, and only the changes are shown again, with the call asked again; only a plain accept counts for the merge. **Wrong direction** goes back to intake with the named example or scope item; the plan is corrected and approved again before any more code.
 - Merge only after acceptance. With `Auto-merge: on`, open a PR into the integration branch and merge when CI passes, then dev QA as today. Never the production branch.
 
 ### `qa-writer` and `qa-runner` changes
@@ -335,7 +334,7 @@ Unchanged in use: with an approved QA Story it reruns the saved scripts on the t
 
 ### Hosts without plugin agents
 
-`/story` sizes the work, runs intake and the plan, builds in the main session at every size, and ends by telling the person to run `/qa docs/stories/<slug>.md` in a new session. The final review is written after that run. The security checks and the code-reading quality checks are run by the person, as today.
+`/story` sizes the work, runs intake and the plan, builds in the main session at every size, and ends by telling the person to run `/qa docs/stories/<slug>.md` in a new session. The final review is written after that run. The `/qa` session runs the security checks and the review after QA, and the person pastes its report back for the final review.
 
 ## What this draft leaves out of the research proposals, and why
 
@@ -343,6 +342,7 @@ Unchanged in use: with an approved QA Story it reruns the saved scripts on the t
 - **Names, personal fields, dates and plural checks** (R4d): too dependent on the stack for a first version. They can be added as plan-specific examples.
 - **Server latency under load**: needs seeded data and a load tool per repository. A plan can state it as an example a person checks.
 - **Reliability target and error budget in the plan** (R4b): kept as one optional line under Operability; no outcome evidence, and it means little before there are users.
+- **A pseudo-locale run with an overflow check, a bundle-size budget, and a rule scan of states behind a click** where the repository has no browser test runner: each needs support from the repository that the kit cannot assume. Code health is read on changed lines instead of compared with the base, so that nothing checks out another commit while QA runs in the same working tree.
 - **A fresh-context check of every task against the plan** (R4c): the runner per example and the review at the end cover it at lower cost. To revisit if the measurement shows drift between tasks.
 
 ## Left to the builder
