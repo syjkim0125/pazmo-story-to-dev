@@ -1,6 +1,6 @@
 # Epic: plan once, build alone, review once
 
-Status: draft 2026-11-25, not approved
+Status: approved 2026-11-25
 
 Research behind this draft: [docs/research/2026-11-25-epic-planning.md](../../research/2026-11-25-epic-planning.md). Section numbers below (R3.1, R4c) point into it. Each design rule is marked **evidence** (a finding supports it) or **choice** (no direct evidence; the reason is given).
 
@@ -53,7 +53,7 @@ With a person present only at the start and the end, three things carry the weig
 
 ## Approaches
 
-Each table is a decision for the owner. The picked row is this draft's proposal.
+Each table was a decision for the owner. The picked rows were approved as drafted on 2026-11-25.
 
 ### 1. Commands
 
