@@ -15,6 +15,7 @@ Production is never used for QA.
 - Needs a person: <steps an agent cannot do, such as 2FA or payment authentication>
 - QA scripts: `qa/<slug>.sh`, run with `BASE_URL=<base URL> bash qa/<slug>.sh`
 - Browser test runner: <command such as `BASE_URL=<base URL> npx playwright test qa/<slug>.spec.ts`, or "none">
+- Quality checks: kit default   <!-- or the repository's own commands for the accessibility scan and the performance run -->
 
 ## Integration (dev)
 

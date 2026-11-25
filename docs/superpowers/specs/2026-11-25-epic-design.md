@@ -320,7 +320,7 @@ Rules:
 - Section 3 lists at most seven decisions, ordered by cost to reverse and then by effect on users, each as a question with where to check it. The rest are linked. (**Choice** on the count and order.)
 - Section 4 is links and numbers from the runners, next to their bars. The main session does not summarize them in its own words.
 - Sections 5 and 6 are kept even when empty: `없음`.
-- The person's call: **accept** turns the decisions to `accepted` and the plan to `Status: Accepted`. **Accept with changes** turns each change into tasks; they run through phase 3, the scenarios they touch run again, and only the changes are shown again. **Wrong direction** goes back to intake with the named example or scope item; the plan is corrected and approved again before any more code.
+- The person's call: **accept** turns the decisions to `accepted` and the review file to `Status: Accepted`; the plan stays `Status: Approved`, which other tools may read. **Accept with changes** turns each change into tasks; they run through phase 3, the scenarios they touch run again, and only the changes are shown again. **Wrong direction** goes back to intake with the named example or scope item; the plan is corrected and approved again before any more code.
 - Merge only after acceptance. With `Auto-merge: on`, open a PR into the integration branch and merge when CI passes, then dev QA as today. Never the production branch.
 
 ### `qa-writer` and `qa-runner` changes
