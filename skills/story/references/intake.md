@@ -29,13 +29,13 @@ Give options to choose from wherever you can.
 
 ## Rules
 
-- Question 2 shows every reading as a list of things a user would see. Recommend none and mark none as the default. An item nobody answered stays open; never move it to Out of scope yourself.
+- Question 2 shows every reading as a list of things a user would see: each item comes with the example it would add, so choosing the item also answers its example. Recommend none and mark none as the default. An item nobody answered stays open; never move it to Out of scope yourself.
 - An example has the form `where · action → visible result`.
 - Never ask about language, framework, libraries, architecture, data model, file layout, how to split or order the work, test strategy, naming, check tools, or anything the repository answers. You decide those.
 - A choice that looks technical but falls under `risks.md`, such as which payment provider to use, is the person's.
 - Ask a `risks.md` item only when it changes this work's behavior.
 
-What `docs/qa.md` lacks to start the app or log in is not asked here: `qa-writer` reports it as gaps, and they are shown at the approval.
+What `docs/qa.md` lacks to start the app or log in is not asked here: `qa-writer` reports it as gaps right after the approval, and only a gap that blocks every check is asked.
 
 ## When to stop asking
 

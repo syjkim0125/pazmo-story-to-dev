@@ -83,11 +83,11 @@ Each table was a decision for the owner. The picked rows were approved as drafte
 
 | | Gains | Costs |
 |---|---|---|
-| **A. One approval covers the plan and the checks (picked)** | `qa-writer` runs before the approval, so the person sees the scenario titles and the gaps in the same message as the plan. No second wait. | A correction to the plan runs the writer again. |
-| B. Keep a separate approval after the build | As today. | A second person step in the middle, which the new direction rules out. |
-| C. No person sees the scenarios | Fastest. | Loses the kit's guard that QA checks what was asked. |
+| A. One approval covers the plan and the checks: `qa-writer` runs before the approval (the first pick, withdrawn after a live run) | The person sees the scenarios with the plan. | The writer runs while scope items are still open, so its scenarios are rewritten after the answers, and the approval message grew to about 45 lines in the run. |
+| B. Keep a separate approval after the build | As in 0.3.0. | A second person step in the middle, which the new direction rules out. |
+| **C. `qa-writer` runs after the approval; scenarios may come only from what the person approved; a one-line summary and the gaps are shown, and only a gap that blocks every check is asked (picked by the owner)** | The writer runs once, on a settled plan. Each scope item carries the example it would add, so one reply can answer and approve. | The person does not read the scenarios before the build; the guard is the rule that a scenario maps to an approved example, an Unchanged item or a quality bar, plus the black-box reading rule. |
 
-**Evidence** in part: people judge intent well from concrete checks (R3.1, TiCoder). That one approval can replace two is a **choice**.
+**Evidence** in part: people judge intent well from concrete checks (R3.1, TiCoder), and the person still approves those in the plan. Dropping the look at the scenarios themselves is a **choice**, made from one live run.
 
 ### 4. How the build runs
 
@@ -211,7 +211,7 @@ Rules:
 
 - Question 2 shows both readings as lists of user-visible items. No item is marked as recommended or default. An item nobody answered stays open; the AI never moves it to out of scope. (**Choice**, approach 2.)
 - An example has the form `where · action → visible result`. (**Evidence**: R3.1, examples a person answers yes or no.)
-- What `docs/qa.md` lacks to start the app or log in is not an intake question: `qa-writer` reports it as gaps at the approval. For large work those gaps must be answered before the approval counts, because without them no example can be checked during the build.
+- What `docs/qa.md` lacks to start the app or log in is not an intake question: `qa-writer` reports it as gaps right after the approval, and a gap that blocks every check is asked before the build starts.
 - Questions 5 to 9 are asked only on their trigger. (**Evidence**: asking by default has a measured cost, R3.1.)
 - Never ask the person about language, framework, libraries, architecture, data model, file layout, task split or order, test strategy, naming, which check tool, or anything the repository answers. A choice that looks technical but falls under `risks.md`, such as which payment provider, is the person's. (**Evidence**: questions the user cannot answer are wasted, R3.1.)
 - Stop asking when every sentence of the request maps to an example, to out of scope with a reason, or to a Human decides item; the readings no longer differ in anything a user would see; and every matched risk item is answered or recorded as open with the tasks it blocks.
@@ -222,9 +222,9 @@ Rules:
 
 1. Start a branch. Write `docs/stories/<slug>.md` from the template: Why, Users, What the person will see (E1…), Scope (smallest reading, fullest reading, what the person chose, out of scope, unchanged), Human decides, Quality bars, Success after launch, Operability, Done when. Content in the person's language.
 2. Quality bars: the AI fills defaults by the kind of Epic (see Quality checks). Each row has the bar, the check and who verifies: script, agent, person at the final review, or after launch only.
-3. Start `qa-writer` with `Story: docs/stories/<slug>.md` and the repository path. It writes `docs/stories/<slug>.qa.md`: at least one scenario per example, one per Unchanged item, one per quality bar that a script or agent verifies, and nothing else. It returns gaps.
-4. **Approval.** Show, one line each: the plan path; today → after; what is in and what is out; each example; each Human decides item; the quality bars that differ from the defaults; the scenario titles with how each runs; the gaps. Ask once. On a correction, update the plan, start the writer again with the person's words, show it again.
-5. After approval: `Status: Approved` on the plan and on the QA Story, commit both. The build starts from these files, not from the conversation. (**Evidence**: instructions spread over turns degrade results, R3.1.)
+3. **Approval.** Show, one line each: the plan path; today → after; the scope items still to choose, each with the example it would add; each example; each Human decides item; what is out of scope; the quality bars. Ask once. A reply that answers every open item and changes no example is the approval. On a correction, update the plan and show only what changed.
+4. After approval: `Status: Approved` on the plan, commit. The build starts from the file, not from the conversation. (**Evidence**: instructions spread over turns degrade results, R3.1.)
+5. Start `qa-writer` with `Story: docs/stories/<slug>.md` and the repository path. It writes `docs/stories/<slug>.qa.md`: at least one scenario per example, one per Unchanged item, one per quality bar that a script or agent verifies, and nothing else. The main session marks it approved, tells the person in one line how many scenarios there are and which gaps remain, and goes on. Only a gap about starting the app, logging in or reaching an example's starting state is asked, because it blocks every check.
 
 Small work writes only Why and the examples, shows the one-line restatement and the size, and goes on without waiting.
 
@@ -330,7 +330,7 @@ Rules:
 
 ### `/qa <story path> [local|preview|dev]`
 
-Unchanged in use: with an approved QA Story it reruns the saved scripts on the target. Without one it starts `qa-writer`, shows the scenarios and asks for approval, since no plan approval covered them.
+Unchanged in use: with an approved QA Story it reruns the saved scripts on the target. Without one it starts `qa-writer`; when the plan is approved the scenarios need no further approval, and for an older or unfinished Story it shows them and asks.
 
 ### Hosts without plugin agents
 

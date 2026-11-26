@@ -19,8 +19,8 @@
 ## Scope
 - Smallest reading: <one line>
 - A fuller reading adds:
-  - [ ] S1. <item>: <file:line and what exists today>
-  - [ ] S2. <item>
+  - [ ] S1. <item>: <file:line and what exists today> → would add: <where · action → visible result>
+  - [ ] S2. <item> → would add: <where · action → visible result>
 - Chosen by <person> on <date>: <the ids that are in; "open" until they answer>
 - Out of scope:
   - O1. <item>: <why, or "declined by <person>">

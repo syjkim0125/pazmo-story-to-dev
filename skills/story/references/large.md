@@ -60,7 +60,7 @@ Only the runner's result changes a task to `passed`. A builder saying it is done
 
 A flag parks the tasks that depend on it (`parked`, with the flag in `note`). Go on with the rest. A flag that parks no task is answered at the final review, under `사람이 정할 것`.
 
-When no task is `todo` and some are `parked`, stop, ask the person every open flag in one message, and end your turn: this is the only question in the middle of a build. With the answers: write each under its flag and in the plan's Human decides line, set the tasks it parked to `todo`, commit, and continue from 2. An answer that adds, drops or changes an example is a correction: update the plan, start `qa-writer` again with `Correction:`, and get the changed scenarios approved before building.
+When no task is `todo` and some are `parked`, stop, ask the person every open flag in one message, and end your turn: this is the only question in the middle of a build. With the answers: write each under its flag and in the plan's Human decides line, set the tasks it parked to `todo`, commit, and continue from 2. An answer that adds, drops or changes an example is a correction: update the plan with the person's words, start `qa-writer` again with `Correction:`, then build.
 
 ## 6. When no task is `todo` or `parked`
 
