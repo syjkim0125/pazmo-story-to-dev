@@ -79,7 +79,8 @@ Status: Draft
 ```
 
 - At least one scenario per example, tagged with its id. An example marked as must not happen gets a scenario that shows it does not happen.
-- One scenario per Unchanged item.
+- One scenario per Unchanged item, checking the words the plan gives. Never ask for a second copy of the app, or another branch, to compare with.
+- Every scenario runs against the one app that `docs/qa.md` starts. What would need the app started another way goes under Gaps.
 - One scenario per Quality bars row that a script or an agent checks, tagged `[quality: a11y-scan]`, `[quality: keyboard]`, `[quality: narrow]`, `[quality: states]`, `[quality: performance]` or `[quality: events]`. The tag is the one in the row's Tag column. It lists the URLs, flow or views it covers, taken from the examples, and the bar from the plan. Rows checked by a person, by a code-reading check or after launch get no scenario.
 - Add no scenario that maps to none of these.
 - Copies that take the same check share one scenario that lists them; its check runs once per copy.

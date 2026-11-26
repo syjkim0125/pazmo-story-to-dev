@@ -1,6 +1,6 @@
 # <Epic | Story>: <outcome in one line>
 
-<!-- Small keeps: Why, What the person will see. Medium adds: Scope, Human decides, Quality bars, Done when. Large adds: Users, Success after launch, Operability. Delete the sections the size does not keep. -->
+<!-- Small keeps: Why, What the person will see. Medium adds: Scope, Human decides, Quality bars, Done when. Large adds: Users, Success after launch, Operability. Delete the sections the size does not keep, except a section whose intake question was asked. The footer stays at every size. -->
 
 ## Why
 - Today: <who has what problem>
@@ -14,16 +14,18 @@
 - E2. <where> · <action> → <visible result>
 - E3. (edge) <where> · <action> → <visible result>
 - E4. (must not happen) <what never shows or happens>
+- QA reaches these states by: <test data, a test account, or a switch no production user can see; delete when every state is reachable as the app is>
 
 ## Scope
 - Smallest reading: <one line>
 - A fuller reading adds:
-  - [ ] <item>: <file:line and what exists today>
-  - [ ] <item>
-- Chosen by <person> on <date>: <the items that are in>
+  - [ ] S1. <item>: <file:line and what exists today>
+  - [ ] S2. <item>
+- Chosen by <person> on <date>: <the ids that are in; "open" until they answer>
 - Out of scope:
-  - O1. <item>: <why>
-- Unchanged: <what must stay exactly as it is>
+  - O1. <item>: <why, or "declined by <person>">
+- Unchanged:
+  - <what must stay exactly as it is, with the exact text a user sees today where QA should check it>
 
 ## Human decides
 - H1. <a decision from references/risks.md> → <the person's answer | open, blocks <what>>
@@ -53,4 +55,4 @@
 ---
 Size: small | medium | large
 Status: Draft | Approved
-Owner: <the person who made the request>
+Owner: <the person who made the request; `git config user.name` unless they say otherwise>

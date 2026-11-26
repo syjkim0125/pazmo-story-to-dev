@@ -24,7 +24,7 @@ Give options to choose from wherever you can.
 | 5 | Each matching decision from `risks.md`, one at a time | A lens matches |
 | 6 | "Who uses this? Is there a group that must not be excluded: age, assistive technology, language or region?" | The work has a user interface and the repository does not say |
 | 7 | "After launch, what would tell you this worked? What must not get worse?" | Once, for large work; with no answer, propose one for a yes or no |
-| 8 | "Can this reach everyone at once, or must it be possible to turn it off?" | It changes a flow existing users rely on, or a lens matched |
+| 8 | "Can this reach everyone at once, or must it be possible to turn it off?" This is the same question as the rollback item of `risks.md`: ask it once. | It changes a flow existing users rely on, or a lens matched |
 | 9 | "Your request says X and also Y. Which holds?" | You found a contradiction |
 
 ## Rules

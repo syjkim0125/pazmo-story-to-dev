@@ -132,10 +132,14 @@ for t in 'is a floor, not "accessible"' 'Never report field numbers before launc
   '[quality: a11y-scan]' '[quality: keyboard]'; do need_text "$Y" "$t"; done
 V=skills/story/assets/REVIEW.md
 for t in '더한 것' '뺀 것' '사람이 정할 것' '확인하지 못한 것' 'at most seven decisions' 'never a justification' 'Status: Draft | Accepted'; do need_text "$V" "$t"; done
-for t in 'npx -y @axe-core/cli@4.14.0' 'npx -y lighthouse@13.6.0' 'never call it field performance' 'Never install a tool, or another version of one' \
+for t in '-p chromedriver@<Chrome major> -p @axe-core/cli@4.14.0' '--chromedriver-path' 'npx -y lighthouse@13.6.0' 'never call it field performance' 'Never install a tool, or another version of one' \
   'the two pinned commands under Quality scenarios' 'SKIP <id>: <reason>' 'only when it installs nothing'; do need_text agents/qa-runner.md "$t"; done
 need_text skills/story/references/quality.md 'Never check out another commit'
 need_text agents/qa-writer.md 'never open it'
+need_text agents/qa-writer.md 'Never ask for a second copy of the app'
+need_text agents/qa-runner.md 'it never starts another one'
+need_text skills/story/SKILL.md 'counts as the approval'
+need_text skills/story/SKILL.md 'story/<slug>'
 need_text skills/qa/SKILL.md 'or it does not say `Status: Approved`'
 for t in 'Add no scenario that maps to none of these' '[quality: a11y-scan]' 'One scenario per Unchanged item' 'tag it `[M1]`'; do need_text agents/qa-writer.md "$t"; done
 need_text skills/qa/assets/QA-ENV.md 'Quality checks: kit default'
