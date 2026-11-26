@@ -1,7 +1,7 @@
 {
   "name": "pazmo-story-to-dev",
-  "version": "0.2.2",
-  "description": "One Story a human reads, a QA list fixed before coding, stock implementation, code review, then QA on the running app.",
+  "version": "0.4.0",
+  "description": "One command for any size of work: the AI sizes it, a person approves one plan, the AI builds, QA and a security review start on their own, and the person reviews the result once.",
   "author": { "name": "JongKun Kim" },
   "license": "MIT",
   "skills": ["./skills/"]
