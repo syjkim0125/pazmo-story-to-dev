@@ -47,11 +47,11 @@
 - Roll back when: <the signal you propose, for the person to confirm>
 
 ## Done when
-- [ ] Every E# passes on the running app, on checks the builder cannot edit
-- [ ] Every quality bar passes, or is listed as not verified with the reason
-- [ ] Security review: no confirmed finding open
-- [ ] Every Human decides item is answered
-- [ ] The person has done the final review
+- Every E# passes on the running app, on checks the builder cannot edit
+- Every quality bar passes, or is listed as not verified with the reason
+- Security review: no confirmed finding open
+- Every Human decides item is answered
+- The person has done the final review
 
 ---
 Size: small | medium | large
