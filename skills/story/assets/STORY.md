@@ -1,6 +1,6 @@
 # <Epic | Story>: <outcome in one line>
 
-<!-- Small keeps: Why, What the person will see. Medium adds: Scope, Human decides, Quality bars, Done when. Large adds: Users, Success after launch, Operability. Delete the sections the size does not keep, except a section whose intake question was asked. The footer stays at every size. -->
+<!-- Title: Epic for large work, Story otherwise. Small keeps: Why, What the person will see. Medium adds: Scope, Human decides, Quality bars, Done when. Large adds: Users, Success after launch, Operability. Delete the sections the size does not keep, except a section whose intake question was asked. The footer stays at every size. -->
 
 ## Why
 - Today: <who has what problem>
@@ -21,6 +21,7 @@
 - A fuller reading adds:
   - [ ] S1. <item>: <file:line and what exists today> → would add: <where · action → visible result>
   - [ ] S2. <item> → would add: <where · action → visible result>
+  - [ ] S3a / S3b. <two readings that exclude each other; the person picks one>
 - Chosen by <person> on <date>: <the ids that are in; "open" until they answer>
 - Out of scope:
   - O1. <item>: <why, or "declined by <person>">
@@ -38,12 +39,12 @@
 ## Success after launch
 - Primary metric: <what would tell you this worked>
 - Must not get worse: <one to three guardrails>
-- Events to record: <name: when it fires>
+- Events to record: <name: when it fires | none>
 - Personal data: <what is collected, kept how long, how deleted | none>
 
 ## Operability
 - Release: all at once | behind a switch | staged
-- Roll back when: <signal and threshold>
+- Roll back when: <the signal you propose, for the person to confirm>
 
 ## Done when
 - [ ] Every E# passes on the running app, on checks the builder cannot edit

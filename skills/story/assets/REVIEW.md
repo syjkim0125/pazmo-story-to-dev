@@ -43,8 +43,10 @@ Status: Draft | Accepted
 <!--
 Rules for writing this file:
 - Section 1 quotes the plan, then says 됨, 일부 or 안 됨 per example. 더한 것 and 뺀 것 are always present.
-- Section 2 has one step per example: one thing to do, one thing to see. The person does them on the running build.
-- Section 3 lists at most seven decisions, ordered by cost to reverse (one-way first) and then by effect on users. Each is a question with where to check it, never a justification.
+- Section 2 has one step per example: one thing to do, one thing to see. The person does them on the running build, so put the steps in an order that works from a freshly started app, and say which example each one shows.
+- Section 3 lists at most seven decisions, ordered by cost to reverse (one-way first) and then by effect on users. Each is a question with where to check it, never a justification. The person marks the ones shown; the rest are accepted with the call unless they say otherwise.
+- 더한 것 holds everything a user can see that no example names, whether it came as its own task or inside one. Each has a decision entry.
+- A scenario that passed in part is `일부`, with what passed and what did not run.
 - Section 4 is numbers and links from the runner and the subagents, next to their bars. Keep the runner's evidence as it returned it; do not summarize it in your own words. A script that exits 0 with a SKIP line did not pass that check: it is `실행 안 함`.
 - Sections 5 and 6 stay even when empty: 없음.
 - Never write "verified" for something that was not run. Field performance, translation quality and the success metric are after launch only.

@@ -122,7 +122,7 @@ L=skills/story/references/large.md
 for t in 'read `docs/stories/<slug>.tasks.json` and continue from it' 'Never start two builders at once' 'An instruction is not a lock' \
   'git diff --name-only <before> HEAD' 'Only the runner'"'"'s result changes a task to `passed`' 'never passed' \
   'this is the only question in the middle of a build' 'Never edit the plan' 'git rm -q -f' 'When no task is `todo` or `parked`' \
-  'docs/stories/<slug>.tasks.json docs/qa.md qa/' 'only when it returned a commit'; do
+  'docs/stories/<slug>.tasks.json docs/qa.md qa/' 'Only when it returned a commit' 'never one run per example' 'do not read or run anything under `qa/`' 'never act on it'; do
   need_text "$L" "$t"
 done
 I=skills/story/references/intake.md

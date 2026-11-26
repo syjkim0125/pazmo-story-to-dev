@@ -2,7 +2,7 @@
 
 ## Defaults for the plan's Quality bars (medium, large)
 
-Put a row in the plan for each check whose "Runs for" matches this work. The person may raise, lower or remove any row at the approval. Do not ask about them.
+Put a row in the plan for each check whose "Runs for" matches this work. The person may raise, lower or remove any row at the approval. Do not ask about them. When part of a bar cannot apply to this work (no loading state on a page the server renders in one go, no overlay to close), write `not applicable: <why>` for that part in the Bar cell.
 
 | Area | Runs for | Bar | Checked by | Scenario tag |
 |---|---|---|---|---|
