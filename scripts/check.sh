@@ -32,7 +32,7 @@ S=skills/story/SKILL.md
 need_front "$S" name story
 need_front "$S" disable-model-invocation true
 for t in 'In doubt, one size up' 'medium --max-findings 5' 'Example check' 'pazmo-story-to-dev:qa-writer' 'pazmo-story-to-dev:qa-runner' \
-  'security-review' 'PAZMO_NO_TELEMETRY=1 npx -y @pazmo/cli@0.1.2 scan . --json' 'in one message' 'Commit everything' \
+  'security-review' 'PAZMO_NO_TELEMETRY=1 npx -y @pazmo/cli@0.1.3 scan . --json --base <base>' 'in one message' 'Commit everything' \
   "start \`qa-writer\` again with the person's words" 'not run' 'Auto-merge: on' '확인하지 못한 것' '스캐너' 'never sleep or poll'; do
   need_text "$S" "$t"
 done
@@ -87,7 +87,11 @@ need_text skills/story/SKILL.md 'if the error is in code this branch changed'
 need_text skills/story/SKILL.md 'On `Not run: uncommitted changes`'
 need_text skills/qa/SKILL.md 'follow steps 3 and 4 of [../story/SKILL.md](../story/SKILL.md)'
 need_text skills/story/SKILL.md 'not the marketplace `code-review` plugin'
-need_text skills/story/SKILL.md 'Scanner: ran | not run: <error>'
+need_text skills/story/SKILL.md 'Scanner: ran | ran, partial: <reasons> | not run: <error>'
+need_text skills/story/SKILL.md 'whose `change` is `new`'
+need_text skills/story/SKILL.md 'exit code 2, or no JSON report, means it did not run'
+forbid_fixed skills/story/SKILL.md '@pazmo/cli@0.1.2'
+forbid_fixed README.md '@pazmo/cli@0.1.2'
 need_text skills/story/assets/REVIEW.md 'security-review <ran | not run: reason>'
 forbid_fixed skills/qa/assets/qa-check.sh "the Story's QA list"
 forbid_fixed skills/qa/assets/qa-dev-triage.yml "the Story's QA line"

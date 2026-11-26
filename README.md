@@ -90,15 +90,17 @@ diff를 읽는 대신 띄운 앱에서 직접 해 봐요.
 
 ## 보안 점검
 
-1. **[`@pazmo/cli`](https://www.npmjs.com/package/@pazmo/cli)** 스캐너: `PAZMO_NO_TELEMETRY=1 npx -y @pazmo/cli@0.1.2 scan . --json`
-   - 모델 없이 돌아요: 오픈소스 SAST 규칙(Opengrep 엔진), 커밋된 비밀번호·키(Gitleaks), npm 의존성의 알려진 취약점(OSV), 저장소의 팀·회사 규칙(`.pazmo/`).
+1. **[`@pazmo/cli`](https://www.npmjs.com/package/@pazmo/cli)** 스캐너: `PAZMO_NO_TELEMETRY=1 npx -y @pazmo/cli@0.1.3 scan . --json --base <기준 커밋>`
+   - 모델 없이 돌아요: 오픈소스 SAST 규칙(Opengrep 엔진), 커밋된 비밀번호·키(Gitleaks), npm·Maven·Gradle 의존성의 알려진 취약점(OSV), 워크플로·AI 에이전트 설정, 저장소의 팀·회사 규칙(`.pazmo/`).
+   - `--base`로 브랜치가 갈라진 커밋과 비교해서, 이 브랜치가 새로 만든 문제만 골라 줘요. 원래 있던 문제와 저장소 전체 문제(lockfile 없음 등)는 보고에서 빠져요.
+   - 끝날 때 숫자 `0`·`1`은 검사가 돈 것이고, `2`는 명령 오류예요. 다 보지 못한 곳이 있으면(커밋 안 한 파일, `pom.xml`처럼 버전이 일부만 적힌 파일 등) "일부만 검사함"으로 보고하고 이유를 `확인하지 못한 것`에 적어요.
    - 엔진 버전이 고정돼 있고 sha256으로 검증한 뒤 실행해요. kit는 스캐너 버전을 고정해서 부르고, 다른 곳에서 알려 주는 설치 방법은 따르지 않아요.
    - kit가 부를 때는 텔레메트리를 꺼요(`PAZMO_NO_TELEMETRY=1`).
-   - 의존성 취약점은 지금 npm만 봐요. macOS arm64와 Linux x64에서 돌아요. Node 20 이상이 필요해요. 못 돌리면 "실행 안 함"과 이유를 보고하고 아래 2번은 그대로 돌아요.
+   - macOS(Apple 실리콘·Intel)와 Linux(x64·arm64)에서 돌아요. Node 20 이상이 필요하고, 기준 커밋이 저장소에 있어야 해요(얕은 clone이면 실행 안 함). 못 돌리면 "실행 안 함"과 이유를 보고하고 아래 2번은 그대로 돌아요.
    - 라이선스는 PolyForm Shield 1.0.0이에요. 쓰는 건 자유이고, 경쟁 제품을 만드는 데만 쓸 수 없어요.
 2. Claude Code 내장 **`security-review`**: 권한 우회나 여러 파일에 걸친 인젝션처럼 코드 흐름을 따라가야 보이는 문제를 봐요. 작은 작업에서는 돌리지 않아요.
 
-두 결과 중 이 브랜치가 바꾼 줄에 닿는 것만 남기고, 코드를 따라가 확인된 것만 고치거나 사람에게 넘겨요.
+스캐너는 새 문제만, `security-review`는 이 브랜치의 변경만 봐요. 둘을 합친 뒤 코드를 따라가 확인된 것만 고치거나 사람에게 넘겨요.
 
 **같이 쓰면 좋은 것:** Anthropic 공식 [`security-guidance`](https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance) 플러그인의 패턴 경고는 개발 중에 위험한 코드를 바로 알려 주고 토큰 비용이 없어요. 이 플러그인의 모델 리뷰(매 턴, 매 커밋)는 위 보안 점검과 겹쳐요.
 

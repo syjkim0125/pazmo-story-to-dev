@@ -24,7 +24,7 @@ Plan: docs/stories/<slug>.md
 - 예시: <E# → file:line or test>
 - QA (<target>): | 시나리오 | 실행 | 결과 | 근거 |
 - 품질: 접근성 위반 <n> (기준 0) · 키보드 <result> · 좁은 화면 <result> · 상태 <result> · 성능 <value> (기준 <bar>) · 코드 건강 <warnings on changed lines>   <!-- a bar the plan does not have: 해당 없음; a check that did not run: 실행 안 함 and the reason in section 6 -->
-- 보안: <fixed> / <for the person> / <left, with reason>, or "지적 없음"; 스캐너 <ran | not run: reason>, security-review <ran | not run: reason>
+- 보안: <fixed> / <for the person> / <left, with reason>, or "지적 없음"; 스캐너 <ran | ran, partial: reason | not run: reason>, security-review <ran | not run: reason>
 - 리뷰: <fixed> / <for the person> / <left, with reason>
 - QA 스크립트: <qa/<slug>.* path>
 
